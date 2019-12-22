@@ -1,6 +1,7 @@
 module Api
   module V1
     class ChallengesController < ApplicationController
+      before_action :authorize_access_request!, except: [:show, :index]
       before_action :set_challenge, only: [:show, :update, :destroy]
 
       # GET /challenges
