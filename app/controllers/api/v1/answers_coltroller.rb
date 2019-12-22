@@ -48,7 +48,7 @@ module Api
 
         # Only allow a trusted parameter "white list" through.
         def answer_params
-          params.require(:answer).permit(:name, :user_id, :challenge_id)
+          params.require(:answer).permit(:answer, :user_id, :challenge_id)
         end
     end
   end
