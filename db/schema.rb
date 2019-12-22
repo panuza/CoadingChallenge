@@ -31,10 +31,10 @@ ActiveRecord::Schema.define(version: 2019_12_22_045854) do
     t.text "question"
     t.string "category"
     t.integer "difficulty_level"
-    t.bigint "users_id"
+    t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["users_id"], name: "index_challenges_on_users_id"
+    t.index ["user_id"], name: "index_challenges_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|

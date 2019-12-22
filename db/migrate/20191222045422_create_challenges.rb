@@ -6,7 +6,7 @@ class CreateChallenges < ActiveRecord::Migration[5.2]
       t.text :question
       t.string :category
       t.integer :difficulty_level
-      t.references :users
+      t.references :user
 
       t.timestamps
     end
