@@ -2,8 +2,12 @@ Rails.application.routes.draw do
   
   namespace :api do
     namespace :v1 do
+      resources :users
       resources :answers
       resources :challenges
+      scope :challenges, controller: "challenges" do
+        get "/myChallenges/:user_id" => "challenges#my_challenges"
+      end
     end
   end
   root to: "home#index"

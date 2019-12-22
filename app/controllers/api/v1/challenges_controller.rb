@@ -1,12 +1,18 @@
 module Api
   module V1
     class ChallengesController < ApplicationController
-      before_action :authorize_access_request!, except: [:show, :index]
+      before_action :authorize_access_request!
       before_action :set_challenge, only: [:show, :update, :destroy]
 
       # GET /challenges
       def index
         @challenges = Challenge.all
+
+        render json: @challenges
+      end
+
+      def my_challenges
+        @challenges = current_user.challenges.all
 
         render json: @challenges
       end
@@ -19,9 +25,9 @@ module Api
       # POST /challenges
       def create
         @challenge = Challenge.new(challenge_params)
-
+        @challenge.user_id = current_user.id
         if @challenge.save
-          render json: @challenge, status: :created, location: @challenge
+          render json: @challenge, status: :created
         else
           render json: @challenge.errors, status: :unprocessable_entity
         end
@@ -49,7 +55,7 @@ module Api
 
         # Only allow a trusted parameter "white list" through.
         def challenge_params
-          params.require(:challenge).permit(:name, :description, :question, :category, :difficulty_level, :user)
+          params.require(:challenge).permit(:name, :description, :question, :category, :difficulty_level)
         end
     end
   end
