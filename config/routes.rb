@@ -8,6 +8,9 @@ Rails.application.routes.draw do
       scope :challenges, controller: "challenges" do
         get "/myChallenges/:user_id" => "challenges#my_challenges"
       end
+      scope :answers, controller: "answers" do
+        get "/challengeAnswers/:challenge_id" => "answers#challenge_answers"
+      end
     end
   end
   root to: "home#index"

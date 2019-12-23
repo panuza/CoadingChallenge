@@ -1,12 +1,18 @@
 module Api
   module V1
     class AnswersController < ApplicationController
-      before_action :authorize_access_request!, except: [:show, :index]
+      before_action :authorize_access_request!
       before_action :set_answer, only: [:show, :update, :destroy]
 
       # GET /answers
       def index
         @answers = Answer.all
+
+        render json: @answers
+      end
+
+      def challenge_answers
+        @answers = Answer.where(challenge_id: params[:challenge_id])
 
         render json: @answers
       end
@@ -21,7 +27,7 @@ module Api
         @answer = Answer.new(answer_params)
 
         if @answer.save
-          render json: @answer, status: :created, location: @answer
+          render json: @answer, status: :created
         else
           render json: @answer.errors, status: :unprocessable_entity
         end
