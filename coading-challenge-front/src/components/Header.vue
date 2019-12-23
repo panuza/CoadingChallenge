@@ -6,7 +6,7 @@
         <router-link to="/signup" class="link-grey px-2 no-underline" v-if="!signedIn()">Sign Up</router-link>
         <router-link to="/challenges" class="link-grey px-2 no-underline" v-if="signedIn()">Challenges</router-link>
         <!-- <router-link to="/createChallenges" class="link-grey px-2 no-underline" v-if="signedIn()">Create Challenges</router-link> -->
-        <router-link to="/answers" class="link-grey px-2 no-underline" v-if="signedIn()">Answers</router-link>
+        <!-- <router-link to="/answers" class="link-grey px-2 no-underline" v-if="signedIn()">Answers</router-link> -->
         <a href="#" @click.prevent="signOut" class="link-grey px-2 no-underline" v-if="signedIn()">Sign out</a>
       </div>
     </div>
