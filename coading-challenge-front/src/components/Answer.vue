@@ -4,12 +4,12 @@
     <div class="container pt-5">
       <div class="row">
         <div class="col-md-6">
-          <div v-if="answers.length <= 0">
+          <!-- <div v-if="answers.length <= 0">
             <h3>No answers available in a challenge</h3>
           </div>
-          <div v-else>
+          <div v-else> -->
             <h3>All answers in a challenge</h3>
-          </div>
+          <!-- </div> -->
         </div>
         <div class="col-md-6">
            <button class="bg-transprent text-sm hover:bg-red text-red hover:text-white no-underline font-bold py-2 px-4 rounded border border-red"
@@ -17,18 +17,24 @@
         </div>
       </div>
       <div class="row pt-5">
-        <div class="row w-100" v-if="answers.length > 0">
+        <!-- <div class="row w-100" v-if="answers.length > 0"> -->
           <table class="py-4" >
             <tr>
               <th>Answer</th>
             </tr>
             <tr v-for="answer in answers" :key="answer.id" :answer="answer">
-              <td>{{answer.answer}}</td>
-              <!-- <td><a href="#" class="bg-transprent text-sm hover:bg-red text-red hover:text-white no-underline font-bold py-2 px-4 rounded border border-red"
-             @click.prevent="createAnswer(answer.id)">Answer the challenge</a></td> -->
+              <td>
+                <div class="row">
+                  <div class="col-md-6">{{answer.answer}}</div>
+                  <div class="col-md-3"><a v-if="user.id !== answer.user_id" href="#"
+               @click.prevent="createAnswer(answer.id)">Vote Up</a></div>
+               <div class="col-md-3"><a v-if="user.id !== answer.user_id && user.skill_level >= 10" href="#"
+               @click.prevent="createAnswer(answer.id)">Vote Down</a></div>
+                </div>
+              </td>
             </tr>
           </table>
-        </div>
+        <!-- </div> -->
       </div>
     </div>
   </div>
@@ -74,6 +80,12 @@ export default {
     },
     createAnswer(){
       this.$router.replace(`/createAnswers/${this.challenge_id}`)
+    },
+    upVote(){
+
+    },
+    downVote(){
+
     }
   }
 }
@@ -91,7 +103,4 @@ td, th {
   padding: 8px;
 }
 
-tr:nth-child(even) {
-  background-color: #dddddd;
-}
 </style>
