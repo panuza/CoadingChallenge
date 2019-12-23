@@ -25,11 +25,15 @@ module Api
       # POST /answers
       def create
         @answer = Answer.new(answer_params)
-
-        if @answer.save
-          render json: @answer, status: :created
+        given_answer =  Answer.where(user_id: current_user.id, challenge_id:  params[:answer][:challenge_id])
+        if given_answer.present?
+          answer_found
         else
-          render json: @answer.errors, status: :unprocessable_entity
+          if @answer.save
+            render json: @answer, status: :created
+          else
+            render json: @answer.errors, status: :unprocessable_entity
+          end
         end
       end
 
@@ -53,6 +57,9 @@ module Api
           @answer = Answer.find(params[:id])
         end
 
+        def answer_found
+          render json: { error: "You have already answered to this challenge." }, status: :answer_found
+        end
         # Only allow a trusted parameter "white list" through.
         def answer_params
           params.require(:answer).permit(:answer, :user_id, :challenge_id)
