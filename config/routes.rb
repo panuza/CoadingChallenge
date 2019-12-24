@@ -10,6 +10,8 @@ Rails.application.routes.draw do
       end
       scope :answers, controller: "answers" do
         get "/challengeAnswers/:challenge_id" => "answers#challenge_answers"
+        get "/upVote/:id" => "answers#up_vote"
+        get "/downVote/:id" => "answers#down_vote"
       end
     end
   end

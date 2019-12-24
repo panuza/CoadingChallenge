@@ -17,6 +17,24 @@ module Api
         render json: @answers
       end
 
+      def up_vote
+        @answer = Answer.find(params[:id])
+        @user = User.find(@answer.user_id)
+        @vote_count = @user.vote_count + 1
+        @user.update_attribute(:vote_count, @vote_count)
+
+        render json: @answer
+      end
+
+      def down_vote
+        @answer = Answer.find(params[:id])
+        @user = User.find(@answer.user_id)
+        @vote_count = @user.vote_count - 1
+        @user.update_attribute(:vote_count, @vote_count)
+
+        render json: @answers
+      end
+
       # GET /answers/1
       def show
         render json: @answer

@@ -21,16 +21,15 @@
           <table class="py-4" >
             <tr>
               <th>Answer</th>
+
             </tr>
             <tr v-for="answer in answers" :key="answer.id" :answer="answer">
               <td>
                 <div class="row">
                   <div class="col-md-6">{{answer.answer}}</div>
-                  <div class="col-md-3"><a v-if="user.id !== answer.user_id" href="#"
-               @click.prevent="createAnswer(answer.id)">Vote Up</a></div>
-               <div class="col-md-3"><a v-if="user.id !== answer.user_id && user.skill_level >= 10" href="#"
-               @click.prevent="createAnswer(answer.id)">Vote Down</a></div>
-                </div>
+                  <div v-if="user.id !== answer.user_id" class="col-md-3" @click="upVote(answer.id)"><a  href="#">Vote Up</a></div>
+                  <div v-if="user.id !== answer.user_id && user.skill_level >= 10" class="col-md-3" @click="downVote(answer.id)"><a  href="#">Vote Down</a></div>
+                  </div>
               </td>
             </tr>
           </table>
@@ -81,12 +80,27 @@ export default {
     createAnswer(){
       this.$router.replace(`/createAnswers/${this.challenge_id}`)
     },
-    upVote(){
-
+    upVote(id){
+      if(id){
+        this.$http.secured.get(`/api/v1/answers/upVote/${id}`)
+          .then(response => {
+            this.answers = response.data 
+            this.$router.replace('/challenges')
+          })
+          .catch(error => this.setError(error, 'Something went wrong'))
+      }
     },
-    downVote(){
-
-    }
+    downVote(id){
+      if(id){
+        this.$http.secured.get(`/api/v1/answers/downVote/${id}`)
+        .then(response => {
+          this.answers = response.data 
+          this.$router.replace('/challenges')
+        })
+        .catch(error => this.setError(error, 'Something went wrong'))
+      }
+    },
+    
   }
 }
 </script>
