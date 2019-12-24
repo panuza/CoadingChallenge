@@ -64,7 +64,7 @@ export default {
         .then(response => {
           this.answers.push(response.data)
           this.newAnswer = ''
-          this.$router.replace('/challenges')
+          this.$router.replace(`/answers/${this.challenge_id}`)
         })
         .catch(error => this.setError(error, 'Cannot create answer'))
     },
