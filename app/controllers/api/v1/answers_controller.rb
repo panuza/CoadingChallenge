@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 module Api
   module V1
     class AnswersController < ApplicationController
       before_action :authorize_access_request!
-      before_action :set_answer, only: [:show, :update, :destroy]
+      before_action :set_answer, only: %i[show update destroy]
 
       # GET /answers
       def index
@@ -20,8 +22,11 @@ module Api
       def up_vote
         @answer = Answer.find(params[:id])
         @user = User.find(@answer.user_id)
-        @vote_count = @user.vote_count + 1
-        @user.update_attribute(:vote_count, @vote_count)
+        @answer.upvote_from @user
+
+        unless (@answer.get_upvotes.size % 10).zero?
+          @user.update(skill_level: @answer.get_upvotes.size)
+        end
 
         render json: @answer
       end
@@ -29,10 +34,11 @@ module Api
       def down_vote
         @answer = Answer.find(params[:id])
         @user = User.find(@answer.user_id)
-        @vote_count = @user.vote_count - 1
-        @user.update_attribute(:vote_count, @vote_count)
 
-        render json: @answers
+        if @user.skill_level >= 10
+          @user.downvote_from @user
+        end
+        render json: @answer
       end
 
       # GET /answers/1
@@ -43,7 +49,7 @@ module Api
       # POST /answers
       def create
         @answer = Answer.new(answer_params)
-        given_answer =  Answer.where(user_id: current_user.id, challenge_id:  params[:answer][:challenge_id])
+        given_answer = Answer.where(user_id: current_user.id, challenge_id: params[:answer][:challenge_id])
         if given_answer.present?
           answer_found
         else
@@ -70,18 +76,20 @@ module Api
       end
 
       private
-        # Use callbacks to share common setup or constraints between actions.
-        def set_answer
-          @answer = Answer.find(params[:id])
-        end
 
-        def answer_found
-          render json: { error: "You have already answered to this challenge." }, status: :answer_found
-        end
-        # Only allow a trusted parameter "white list" through.
-        def answer_params
-          params.require(:answer).permit(:answer, :user_id, :challenge_id)
-        end
+      # Use callbacks to share common setup or constraints between actions.
+      def set_answer
+        @answer = Answer.find(params[:id])
+      end
+
+      def answer_found
+        render json: { error: 'You have already answered to this challenge.' }, status: :answer_found
+      end
+
+      # Only allow a trusted parameter "white list" through.
+      def answer_params
+        params.require(:answer).permit(:answer, :user_id, :challenge_id)
+      end
     end
   end
 end
