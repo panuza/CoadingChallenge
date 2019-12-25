@@ -1,5 +1,10 @@
 Rails.application.routes.draw do
-  
+
+  root to: "home#index"
+
+  require 'sidekiq/web'
+  mount Sidekiq::Web => '/sidekiq'
+
   namespace :api do
     namespace :v1 do
       resources :users
@@ -15,7 +20,7 @@ Rails.application.routes.draw do
       end
     end
   end
-  root to: "home#index"
+
   post 'refresh', controller: :refresh, action: :create
   post 'signin', controller: :signin, action: :create
   post 'signup', controller: :signup, action: :create
