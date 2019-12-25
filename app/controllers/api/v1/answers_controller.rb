@@ -25,7 +25,7 @@ module Api
         @answer.upvote_from @user
 
         unless (@answer.get_upvotes.size % 10).zero?
-          @user.update(skill_level: @answer.get_upvotes.size)
+          SkillWorker.perform_async(@user.id, @answer.id)
         end
 
         render json: @answer
