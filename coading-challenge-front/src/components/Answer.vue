@@ -86,6 +86,7 @@ export default {
           .then(response => {
             this.answers = response.data 
             this.$router.replace('/challenges')
+            alert("You have voted successfully")
           })
           .catch(error => this.setError(error, 'Something went wrong'))
       }
@@ -96,6 +97,8 @@ export default {
         .then(response => {
           this.answers = response.data 
           this.$router.replace('/challenges')
+          alert("You have down voted successfully")
+
         })
         .catch(error => this.setError(error, 'Something went wrong'))
       }
