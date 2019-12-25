@@ -5,19 +5,19 @@
       <form @submit.prevent="signup" class="w-75">
         <div class="text-red" v-if="error">{{ error }}</div>
         <div class="mb-6">
-          <input type="text" v-model="first_name" class="input" id="first_name" placeholder="First Name">
+          <input type="text" v-model="first_name" class="input" id="first_name" required="required" placeholder="First Name">
         </div>
         <div class="mb-6">
-          <input type="text" v-model="last_name" class="input" id="last_name" placeholder="Last Name">
+          <input type="text" v-model="last_name" class="input" id="last_name" required="required" placeholder="Last Name">
         </div>
         <div class="mb-6">
-          <input type="email" v-model="email" class="input" id="email" placeholder="Email">
+          <input type="email" v-model="email" class="input" id="email" required="required" placeholder="Email">
         </div>
         <div class="mb-6 pt-2">
-          <input type="password" v-model="password" class="input" id="password" placeholder="Password">
+          <input type="password" v-model="password" class="input" id="password" required="required" placeholder="Password">
         </div>
         <div class="mb-6 pt-2">
-          <input type="password" v-model="password_confirmation" class="input" id="password_confirmation" placeholder="Password Confirmation">
+          <input type="password" v-model="password_confirmation" class="input" required="required" id="password_confirmation" placeholder="Password Confirmation">
         </div>
         <input type="submit" class="fadeIn fourth mt-3" value="Sign up"></input>
       </form>
