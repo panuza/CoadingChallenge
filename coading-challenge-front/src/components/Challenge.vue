@@ -47,6 +47,9 @@ export default {
       editedChallenge: ''
     }
   },
+  mounted(){
+    // window.location.reload(true);
+  },
   created () {
     if (!localStorage.signedIn) {
       this.$router.replace('/')

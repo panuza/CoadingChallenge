@@ -1,16 +1,19 @@
 
 <template>
-  <div class="max-w-md m-auto py-10">
+  <div class="max-w-md m-auto py-10 col-md-6 offset-md-6">
     <div class="text-red" v-if="error">{{ error }}</div>
     <h3 class="font-mono font-regular text-3xl mb-4">Add your Answer</h3>
     <form action="" @submit.prevent="addAnswer">
-      <div class="mb-6">
+      <div class="">
+        <input type="text" v-model="newAnswer.answer" class="input" id="answer" placeholder="Type your answer">
+      </div>
+    <!--   <div class="mb-6">
         <label>Answer</label>
         <input class="input"
           autofocus autocomplete="off"
           placeholder="Type your answer"
           v-model="newAnswer.answer" />
-      </div>
+      </div> -->
       <input type="submit" value="Add Answer" class="font-sans font-bold px-4 rounded cursor-pointer no-underline bg-green hover:bg-green-dark block w-full py-4 text-white items-center justify-center" />
     </form>
   </div>
