@@ -1,28 +1,27 @@
 <template>
-  <div class="max-w-sm m-auto my-8">
-    <div class="border p-10 border-grey-light shadow rounded">
-      <h3 class="text-2xl mb-6 text-grey-darkest">Sign Up</h3>
-      <form @submit.prevent="signup">
+  <div class="m-auto my-8 text-center pt-5">
+    <div class="border pt-5 p-10 mt-5 border-grey-light shadow rounded col-md-4 offset-md-4 wrapper fadeInDown">
+      <h3 class="text-2xl mb-6 text-grey-darkest w-100">Sign Up</h3>
+      <form @submit.prevent="signup" class="w-75">
         <div class="text-red" v-if="error">{{ error }}</div>
-
         <div class="mb-6">
-          <label for="email" class="label">E-mail Address</label>
-          <input type="email" v-model="email" class="input" id="email" placeholder="andy@web-crunch.com">
+          <input type="text" v-model="first_name" class="input" id="first_name" placeholder="First Name">
         </div>
-
         <div class="mb-6">
-          <label for="password" class="label">Password</label>
+          <input type="text" v-model="last_name" class="input" id="last_name" placeholder="Last Name">
+        </div>
+        <div class="mb-6">
+          <input type="email" v-model="email" class="input" id="email" placeholder="Email">
+        </div>
+        <div class="mb-6 pt-2">
           <input type="password" v-model="password" class="input" id="password" placeholder="Password">
         </div>
-
-        <div class="mb-6">
-          <label for="password_confirmation" class="label">Password Confirmation</label>
+        <div class="mb-6 pt-2">
           <input type="password" v-model="password_confirmation" class="input" id="password_confirmation" placeholder="Password Confirmation">
         </div>
-        <button type="submit" class="font-sans font-bold px-4 rounded cursor-pointer no-underline bg-green hover:bg-green-dark block w-full py-4 text-white items-center justify-center">Sign Up</button>
-
-        <div class="my-4"><router-link to="/" class="link-grey">Sign In</router-link></div>
+        <input type="submit" class="fadeIn fourth mt-3" value="Sign up"></input>
       </form>
+
     </div>
   </div>
 </template>
@@ -32,6 +31,8 @@ export default {
   name: 'Signup',
   data () {
     return {
+      first_name: '',
+      last_name: '',
       email: '',
       password: '',
       password_confirmation: '',
@@ -46,7 +47,7 @@ export default {
   },
   methods: {
     signup () {
-      this.$http.plain.post('/signup', { email: this.email, password: this.password, password_confirmation: this.password_confirmation })
+      this.$http.plain.post('/signup', { first_name: this.first_name, last_name: this.last_name, email: this.email, password: this.password, password_confirmation: this.password_confirmation })
         .then(response => this.signupSuccessful(response))
         .catch(error => this.signupFailed(error))
     },
@@ -73,4 +74,9 @@ export default {
     }
   }
 }
-</script>JavaScript
+</script>
+<style>
+
+
+</style>
+

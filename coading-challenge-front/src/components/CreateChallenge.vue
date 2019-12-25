@@ -1,96 +1,111 @@
 
 <template>
-  <div class="max-w-md m-auto py-10">
+  <div class="m-auto my-8 text-center pt-5 col-md-4 offset-md-4 ">
     <div class="text-red" v-if="error">{{ error }}</div>
     <h3 class="font-mono font-regular text-3xl mb-4">Add a new Challenge</h3>
-    <form action="" @submit.prevent="addChallenge">
-      <div class="mb-6">
-        <label>Name</label>
-        <input class="input"
-          autofocus autocomplete="off"
-          placeholder="Type challenge name"
-          v-model="newChallenge.name" />
-      </div>
-      <div class="mb-6">
-        <label class="label">Description</label>
-        <input class="input" placeholder="Description" v-model="newChallenge.description" />
-      </div>
-      <div class="mb-6">
-        <label class="label">Question</label>
-        <input class="input" placeholder="Type your question" v-model="newChallenge.question" />
-      </div>
-      <div class="mb-6">
-        <label class="label" for="category">Category</label>
-        <select id="category" class="select" v-model="newChallenge.category">
-          <option>Sports</option>
-          <option>History</option>
-          <option>Science</option>
-          <option>Geography</option>
-        </select>
-      </div>
-      <div class="mb-6">
-        <label class="label" for="difficulty_level">Difficulty Level</label>
-        <select id="difficulty_level" class="select" v-model="newChallenge.difficulty_level">
-          <option>1</option>
-          <option>2</option>
-          <option>3</option>
-          <option>4</option>
-        </select>
-      </div>
-      <input type="submit" value="Add Challenge" class="font-sans font-bold px-4 rounded cursor-pointer no-underline bg-green hover:bg-green-dark block w-full py-4 text-white items-center justify-center" />
-    </form>
+    <form @submit.prevent="addChallenge" class="w-100">
+        <div class="text-red" v-if="error">{{ error }}</div>
+          <div class="row">
+            <div class="mb-6 col-md-6">
+              <label class="level"><strong>Name</strong></label>
+              <input type="text" v-model="newChallenge.name" class="input" id="name" placeholder="Enter challenge name">
+            </div>
+            <div class="mb-6 col-md-6">
+            <label class="label"><strong>Question</strong></label>
+
+            <input type="text" v-model="newChallenge.question" class="input" id="question" placeholder="Type your question">
+          </div>
+        </div>
+        <div class="row">
+          <div class="mb-6 col-md-6">
+            <label class="label" for="category"><strong>Category</strong></label>
+            <select id="category" class="custom-select" v-model="newChallenge.category">
+              <option selected>Select category</option>
+              <option>Sports</option>
+              <option>History</option>
+              <option>Science</option>
+              <option>Geography</option>
+            </select>
+          </div>
+          <div class="mb-6 col-md-6">
+            <label class="label" for="difficulty_level"><strong>Difficulty Level</strong></label>
+            <select id="difficulty_level" class="custom-select" v-model="newChallenge.difficulty_level">
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group col-md-12">
+            <label for="description"><strong>Description</strong></label>
+            <textarea class="form-control" type="text" v-model="newChallenge.description" id="description" placeholder="Description of your challenge" rows="2"></textarea>
+          </div>
+       
+        <input type="submit" class="fadeIn fourth mt-3" value="Add Challenge"></input>
+      </form>
 
     <hr class="border border-grey-light my-6" />
 
-    <h3>My Challenges</h3>
+    <h3 class="text-center">My Challenges</h3>
     <ul class="list-reset mt-4">
-      <li class="py-4" v-for="challenge in challenges" :key="challenge.id" :challenge="challenge">
+      <li class="py-4" v-for="challenge in challenges" :key="challenge.id" :challenge="challenge" style="list-style-type: none;">
 
         <div class="flex items-center justify-between flex-wrap">
           <p class="block flex-1 font-mono font-semibold flex items-center ">
             {{ challenge.name }}
           </p>
 
-          <button class="bg-tranparent text-sm hover:bg-blue hover:text-white text-blue border border-blue no-underline font-bold py-2 px-4 mr-2 rounded"
+          <button class="btn-custom bg-tranparent text-sm hover:bg-blue hover:text-white text-blue border border-blue no-underline font-bold py-2 px-4 mr-2 rounded"
           @click.prevent="editChallenge(challenge)">Edit</button>
 
-          <button class="bg-transprent text-sm hover:bg-red text-red hover:text-white no-underline font-bold py-2 px-4 rounded border border-red"
+          <button class="btn-danger bg-transprent text-sm hover:bg-red text-red hover:text-white no-underline font-bold py-2 px-4 rounded border border-red"
          @click.prevent="removeChallenge(challenge)">Delete</button>
         </div>
 
         <div v-if="challenge == editedChallenge">
-          <form action="" @submit.prevent="updateChallenge(challenge)">
-            <div class="mb-6 p-4 bg-white rounded border border-grey-light mt-4">
-              <input class="input" v-model="challenge.name" />
-              <div class="mb-6">
-                <label class="label">Description</label>
-                <input class="input" placeholder="Description" v-model="challenge.description" />
+          <form @submit.prevent="updateChallenge(challenge)" class="w-100">
+            <div class="row">
+              <div class="mb-6 col-md-6">
+                <label class="level"><strong>Name</strong></label>
+                <input type="text" v-model="challenge.name" class="input" id="name">
               </div>
-              <div class="mb-6">
-                <label class="label">Question</label>
-                <input class="input" placeholder="Type your question" v-model="challenge.question" />
-              </div>
-              <div class="mb-6">
-                <label class="label" for="category">Category</label>
-                <select id="category" class="select" v-model="challenge.category">
-                  <option>Sports</option>
-                  <option>History</option>
-                  <option>Science</option>
-                  <option>Geography</option>
-                </select>
-              </div>
-              <div class="mb-6">
-                <label class="label" for="difficulty_level">Difficulty Level</label>
-                <select id="difficulty_level" class="select" v-model="challenge.difficulty_level">
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                </select>
-              </div>
-              <input type="submit" value="Update" class=" my-2 bg-transparent text-sm hover:bg-blue hover:text-white text-blue border border-blue no-underline font-bold py-2 px-4 rounded cursor-pointer">
+              <div class="mb-6 col-md-6">
+              <label class="label"><strong>Question</strong></label>
+
+              <input type="text" v-model="challenge.question" class="input" id="question">
             </div>
-          </form>
+          </div>
+          <div class="row">
+            <div class="mb-6 col-md-6">
+              <label class="label" for="category"><strong>Category</strong></label>
+              <select id="category" class="custom-select" v-model="challenge.category">
+                <option selected>Select category</option>
+                <option>Sports</option>
+                <option>History</option>
+                <option>Science</option>
+                <option>Geography</option>
+              </select>
+            </div>
+            <div class="mb-6 col-md-6">
+              <label class="label" for="difficulty_level"><strong>Difficulty Level</strong></label>
+              <select id="difficulty_level" class="custom-select" v-model="challenge.difficulty_level">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group col-md-12">
+              <label for="description"><strong>Description</strong></label>
+              <textarea class="form-control" type="text" v-model="challenge.description" id="description" placeholder="Description of your challenge" rows="2"></textarea>
+            </div>
+         
+          <input type="submit" class="fadeIn fourth mt-3" value="Add Challenge"></input>
+        </form>
         </div>
       </li>
     </ul>
@@ -157,7 +172,7 @@ export default {
     updateChallenge (challenge) {
       this.editedChallenge = ''
       this.$http.secured.patch(`/api/v1/challenges/${challenge.id}`, { challenge: { name: this.newChallenge.name, description: this.newChallenge.description, question: this.newChallenge.question, category: this.newChallenge.category, difficulty_level: this.newChallenge.difficulty_level } })
-        .catch(error => this.setError(error, 'Cannot update challenge'))
+        .catch(error => this.setError(error, ''))
     }
   }
 }
