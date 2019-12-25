@@ -40,6 +40,8 @@ Run `yarn install` to install all packages
   
 ## Start frontend app
 
+cd coading-challenge-front
+
 Run `yarn dev` 
 
 ## Start backend app
