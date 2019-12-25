@@ -5,50 +5,132 @@ describe Api::V1::ChallengesController, type: :controller do
 
   describe "challenges controller" do 
     before do 
-      @user = User.make!
-      @challenge = Challenge.make!(user_id: @user.id)
-      emulate_user_login(@user)
+      @user = User.create!(first_name: "panuza", last_name: "parajuli", email: "panuza@test.com", password: "12345678", password_confirmation: "12345678")
+      @challenge = Challenge.create!(user_id: @user.id, 
+                                      name: "First challenge", 
+                                      description: "My challenge description", 
+                                      question: "What is your favourite game?",
+                                      category: "Sports",
+                                      difficulty_level: "1")
+      payload = { user_id: @user.id }
+      session = JWTSessions::Session.new(payload: payload)
+      @tokens = session.login
     end 
 
     describe 'GET#index' do
       it 'returns JSON response' do
+        request.cookies[JWTSessions.access_cookie] = @tokens[:access]
         get :index
         
         expect(response.status).to eq 200
         challenges = JSON.parse(response.body)
-        challenge = challenges["challenges"].last
-        expect(challenge["id"]).to eq @challenge.id
+        expect(challenges.last["id"]).to eq @challenge.id
+      end
+    end
+
+    describe 'GET#my_challenges' do
+      it 'returns JSON response' do
+        request.cookies[JWTSessions.access_cookie] = @tokens[:access]
+        get :my_challenges, params: {user_id: @user.id}
+        
+        expect(response.status).to eq 200
+        challenges = JSON.parse(response.body)
+        expect(challenges.last["id"]).to eq @challenge.id
       end
     end
 
 
-    # describe 'POST #show' do
-    #   it 'should show' do
-    #     get :show, params: { :id => @gallery.permalink, permalink: @company.permalink }
-    #     expect(response).to be_successful
+    describe 'POST #show' do
+      it 'should show' do
+        request.cookies[JWTSessions.access_cookie] = @tokens[:access]
 
-    #   end
-    # end 
+        get :show, params: { :id => @challenge.id }
+        expect(response).to be_successful
 
-    # describe 'POST #destroy' do
-    #   it 'should destroy' do
-    #     expect(Gallery.count).to eq 1
-    #     delete :destroy , params: { id: @gallery.permalink, permalink: @company.permalink }
+      end
+    end 
 
-    #     expect(Gallery.count).to eq 0
-    #   end
-    # end
+    describe 'POST #destroy' do
+      it 'should destroy' do
+        request.cookies[JWTSessions.access_cookie] = @tokens[:access]
+        request.headers[JWTSessions.csrf_header] = @tokens[:csrf]
+        expect {
+          delete :destroy, params: { id: @challenge.id }
+        }.to change(Challenge, :count).by(-1)
+      end
+    end
 
-    # describe 'POST #create' do
-    #   it 'should create' do
-    #     Gallery.destroy_all
-    #     expect(Gallery.count).to eq 0
-    #     post :create, params: { permalink: @company.permalink, company_gallery: { description: "test", title: "This is title", date_of_completion: Date.today} }
-    #     expect(Gallery.count).to eq 1
+    describe 'POST #create' do
 
-    #     expect(Gallery.last.title).to eq 'This is title'
+      context 'with valid params' do
+        it 'creates a new challenge' do
+          request.cookies[JWTSessions.access_cookie] = @tokens[:access]
+          request.headers[JWTSessions.csrf_header] = @tokens[:csrf]
+          expect {
+            post :create, params: { challenge: { user_id: @user.id, 
+                                    name: "Second challenge", 
+                                    description: "My challenge description", 
+                                    question: "Who is your favourite player?",
+                                    category: "Sports",
+                                    difficulty_level: "1"}}
+          }.to change(Challenge, :count).by(1)
+        end
 
-    #   end
-    # end
+        it 'renders a JSON response with the new challenge' do
+          request.cookies[JWTSessions.access_cookie] = @tokens[:access]
+          request.headers[JWTSessions.csrf_header] = @tokens[:csrf]
+          post :create, params: { challenge: { user_id: @user.id, 
+                                    name: "Second challenge", 
+                                    description: "My challenge description", 
+                                    question: "Who is your favourite player?",
+                                    category: "Sports",
+                                    difficulty_level: "1"}}
+          expect(response).to have_http_status(:created)
+          expect(response.content_type).to eq('application/json')
+        end
+
+        it 'unauth without CSRF' do
+          request.cookies[JWTSessions.access_cookie] = @tokens[:access]
+          post :create, params: { challenge: { user_id: @user.id, 
+                                    name: "Second challenge", 
+                                    description: "My challenge description", 
+                                    question: "Who is your favourite player?",
+                                    category: "Sports",
+                                    difficulty_level: "1"}}
+          expect(response).to have_http_status(401)
+        end
+      end
+    end
+
+    describe 'PUT #update' do
+      context 'with valid params' do
+        it 'updates the requested challenge' do
+          request.cookies[JWTSessions.access_cookie] = @tokens[:access]
+          request.headers[JWTSessions.csrf_header] = @tokens[:csrf]
+          put :update, params: { id: @challenge.id, challenge: { user_id: @user.id, 
+                                    name: "updated challenge", 
+                                    description: "My challenge description", 
+                                    question: "Who is your favourite player?",
+                                    category: "Sports",
+                                    difficulty_level: "2"}}
+          # put :update, params: { id: challenge.id, challenge: new_attributes }
+          @challenge.reload
+          expect(@challenge.name).to eq "updated challenge"
+        end
+
+        it 'renders a JSON response with the challenge' do
+          request.cookies[JWTSessions.access_cookie] = @tokens[:access]
+          request.headers[JWTSessions.csrf_header] = @tokens[:csrf]
+          put :update, params: { id: @challenge.id, challenge: { user_id: @user.id, 
+                                    name: "updated challenge", 
+                                    description: "My challenge description", 
+                                    question: "Who is your favourite player?",
+                                    category: "Sports",
+                                    difficulty_level: "2"}}
+          expect(response).to have_http_status(:ok)
+          expect(response.content_type).to eq('application/json')
+        end
+      end
+    end
   end 
 end
