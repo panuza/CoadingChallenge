@@ -28,7 +28,7 @@
                 <div class="row">
                   <div class="col-md-6">{{answer.answer}}</div>
                   <div v-if="user.id !== answer.user_id" class="col-md-3" @click="upVote(answer.id)"><a  href="#">Vote Up</a></div>
-                  <div v-if="user.id !== answer.user_id && user.skill_level >= 10" class="col-md-3" @click="downVote(answer.id)"><a  href="#">Vote Down</a></div>
+                  <div v-if="user.id !== answer.user_id" class="col-md-3" @click="downVote(answer.id)"><a  href="#">Vote Down</a></div>
                   </div>
               </td>
             </tr>
