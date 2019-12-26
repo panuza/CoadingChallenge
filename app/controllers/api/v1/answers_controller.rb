@@ -22,10 +22,10 @@ module Api
       def up_vote
         @answer = Answer.find(params[:id])
         @user = User.find(@answer.user_id)
-        @answer.upvote_from @user
+        @answer.upvote_from current_user
 
-        unless (@answer.get_upvotes.size % 10).zero?
-          SkillWorker.perform_async(@user.id, @answer.id)
+        if (@answer.get_upvotes.size % 10).zero?
+          SkillWorker.perform_async(@user.id, @answer.id, "upvote")
         end
 
         render json: @answer
@@ -34,9 +34,11 @@ module Api
       def down_vote
         @answer = Answer.find(params[:id])
         @user = User.find(@answer.user_id)
-
         if @user.skill_level >= 10
-          @user.downvote_from @user
+          @answer.downvote_from current_user
+          if (@answer.get_downvotes.size % 5).zero?
+            SkillWorker.perform_async(@user.id, @answer.id, "downvote")
+          end
         end
         render json: @answer
       end
