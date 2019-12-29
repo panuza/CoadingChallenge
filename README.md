@@ -40,15 +40,15 @@ Run `yarn install` to install all packages
   
 ## Start backend app
 
-Run `bundle exec rails s` to start rails app on your local.
+Run `bundle exec rails s` 
 
 ## Start frontend app
 
-Github link front end app on vue `https://github.com/panuza/frontend-code`
+Github link front end app on vue https://github.com/panuza/frontend-code
 
-Run `yarn dev`  to start app locally.
+Run `yarn dev`  
 
 
 ## Project link on heroku
 
-`https://secure-cove-66231.herokuapp.com`
+https://secure-cove-66231.herokuapp.com
