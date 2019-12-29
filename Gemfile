@@ -27,9 +27,10 @@ gem 'acts_as_votable', '~> 0.12.1'
 gem 'bootsnap', '>= 1.1.0', require: false
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
-gem 'jwt_sessions', '~> 2.3'
 gem 'rack-cors'
 gem 'sidekiq'
+gem 'jwt'
+gem 'simple_command'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

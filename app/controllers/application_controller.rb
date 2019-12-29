@@ -1,14 +1,11 @@
 class ApplicationController < ActionController::API
-  include JWTSessions::RailsAuthorization
-  rescue_from JWTSessions::Errors::Unauthorized, with: :not_authorized
+  before_action :authenticate_request
+  attr_reader :current_user
 
   private
 
-  def current_user
-    @current_user ||= User.find(payload['user_id'])
-  end 
-  
-  def not_authorized
-    render json: { error: 'Not Authorized' }, status: :unauthorized
+  def authenticate_request
+    @current_user = AuthorizeApiRequest.call(request.headers).result
+    render json: { error: 'Not Authorized' }, status: 401 unless @current_user
   end
 end
