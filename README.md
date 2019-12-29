@@ -7,7 +7,7 @@ This is the repository for the CoadingChallenge code base.
 
 ## System dependencies
 
-* Ruby version: 2.5.1
+* Ruby version: 2.6.3
 * Node version: 10.15.3
 * NPM version: 6.5.0
 * Rails version: 5.2.4
@@ -40,7 +40,7 @@ Run `yarn install` to install all packages
   
 ## Start frontend app
 
-cd coading-challenge-front
+`cd coading-challenge-front`
 
 Run `yarn dev` 
 
