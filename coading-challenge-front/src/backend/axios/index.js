@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_URL = 'http://localhost:3000'
+const API_URL = 'https://sleepy-headland-47356.herokuapp.com/'
 
 const securedAxiosInstance = axios.create({
   baseURL: API_URL,
