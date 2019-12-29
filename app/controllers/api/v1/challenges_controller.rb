@@ -47,6 +47,14 @@ module Api
         @challenge.destroy
       end
 
+      def top
+        start_of_week = Time.current.beginning_of_week
+        end_of_week = Time.current.end_of_week
+
+        @top_challenges = Challenge.joins(:answers).group("challenges.id").order("count(answers.challenge_id) DESC").limit(10)
+        render json: @top_challenges
+      end
+
       private
         # Use callbacks to share common setup or constraints between actions.
         def set_challenge
