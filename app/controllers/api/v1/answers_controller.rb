@@ -22,25 +22,33 @@ module Api
       def up_vote
         @answer = Answer.find(params[:id])
         @user = User.find(@answer.user_id)
+        if current_user.voted_for? @answer
+          already_voted
+        else
+          voted_up
+        end
         @answer.upvote_from current_user
-
         if (@answer.get_upvotes.size % 10).zero?
           SkillWorker.perform_async(@user.id, @answer.id, "upvote")
         end
-
-        render json: @answer
+        # render json: @answer
       end
 
       def down_vote
         @answer = Answer.find(params[:id])
         @user = User.find(@answer.user_id)
         if @user.skill_level >= 10
+          if current_user.voted_for? @answer
+            already_voted
+          else
+            voted_down
+          end
           @answer.downvote_from current_user
           if (@answer.get_downvotes.size % 5).zero?
             SkillWorker.perform_async(@user.id, @answer.id, "downvote")
           end
         end
-        render json: @answer
+        # render json: @answer
       end
 
       # GET /answers/1
@@ -82,6 +90,18 @@ module Api
       # Use callbacks to share common setup or constraints between actions.
       def set_answer
         @answer = Answer.find(params[:id])
+      end
+
+      def voted_up
+        render json: { error: 'You have voted up successfully.' }, status: :voted_up
+      end
+
+      def voted_down
+        render json: { error: 'You have voted down successfully.' }, status: :voted_down
+      end
+
+      def already_voted
+        render json: { error: 'You have already voted to this answer.' }, status: :voted_down
       end
 
       def answer_found
