@@ -15,15 +15,13 @@ describe Api::V1::AnswersController, type: :controller do
       @answer = Answer.create!(user_id: @user.id, 
                                 challenge_id: @challenge.id,
                                 answer: "Birat colie")
-      # emulate_user_login(@user)
-      payload = { user_id: @user.id }
-      session = JWTSessions::Session.new(payload: payload)
-      @tokens = session.login
+      token = JsonWebToken.encode(user_id: @user.id)
+      @request.headers['Authorization'] = token
+      @request.headers['CONTENT_TYPE'] = 'application/json'
     end 
 
     describe 'GET#index' do
       it 'returns JSON response' do
-        request.cookies[JWTSessions.access_cookie] = @tokens[:access]
         get :index
         
         expect(response.status).to eq 200
@@ -34,7 +32,6 @@ describe Api::V1::AnswersController, type: :controller do
 
     describe 'GET#challenge_answers' do
       it 'returns JSON response' do
-        request.cookies[JWTSessions.access_cookie] = @tokens[:access]
         get :challenge_answers, params: { challenge_id: @challenge.id}
         
         expect(response.status).to eq 200
@@ -45,8 +42,6 @@ describe Api::V1::AnswersController, type: :controller do
 
     describe 'POST #show' do
       it 'should show' do
-        request.cookies[JWTSessions.access_cookie] = @tokens[:access]
-
         get :show, params: { :id => @answer.id }
         expect(response).to be_successful
 
@@ -55,8 +50,6 @@ describe Api::V1::AnswersController, type: :controller do
 
     describe 'POST #destroy' do
       it 'should destroy' do
-        request.cookies[JWTSessions.access_cookie] = @tokens[:access]
-        request.headers[JWTSessions.csrf_header] = @tokens[:csrf]
         expect {
           delete :destroy, params: { id: @answer.id }
         }.to change(Answer, :count).by(-1)
@@ -71,15 +64,13 @@ describe Api::V1::AnswersController, type: :controller do
                                       question: "What is your favourite game?",
                                       category: "Sports",
                                       difficulty_level: "1")
-      payload = { user_id: @user.id }
-      session = JWTSessions::Session.new(payload: payload)
-      @tokens = session.login
+      token = JsonWebToken.encode(user_id: @user.id)
+      @request.headers['Authorization'] = token
+      @request.headers['CONTENT_TYPE'] = 'application/json'
       end
 
       context 'with valid params' do
         it 'creates a new answer' do
-          request.cookies[JWTSessions.access_cookie] = @tokens[:access]
-          request.headers[JWTSessions.csrf_header] = @tokens[:csrf]
           expect {
             post :create, params: { answer: { user_id: @user.id, 
                                     challenge_id: @new_challenge.id, 
@@ -88,8 +79,6 @@ describe Api::V1::AnswersController, type: :controller do
         end
 
         it 'renders a JSON response with the new answer' do
-          request.cookies[JWTSessions.access_cookie] = @tokens[:access]
-          request.headers[JWTSessions.csrf_header] = @tokens[:csrf]
           post :create, params: { answer: { user_id: @user.id, 
                                     challenge_id: @new_challenge.id, 
                                     answer: "My answer to challenge"}}
@@ -97,8 +86,8 @@ describe Api::V1::AnswersController, type: :controller do
           expect(response.content_type).to eq('application/json')
         end
 
-        it 'unauth without CSRF' do
-          request.cookies[JWTSessions.access_cookie] = @tokens[:access]
+        it 'unauth without token' do
+          @request.headers['Authorization'] = ''
           post :create, params: { answer: { user_id: @user.id, 
                                     challenge_id: @challenge.id, 
                                     answer: "My answer to challenge"}}
@@ -110,14 +99,36 @@ describe Api::V1::AnswersController, type: :controller do
                                 challenge_id: @new_challenge.id,
                                 answer: "Birat colie")
 
-          request.cookies[JWTSessions.access_cookie] = @tokens[:access]
-          request.headers[JWTSessions.csrf_header] = @tokens[:csrf]
           expect {
             post :create, params: { answer: { user_id: @user.id, 
                                     challenge_id: @new_challenge.id, 
                                     answer: "My answer to challenge"}}
           }.to change(Answer, :count).by(0)
         end
+      end
+    end
+
+    describe 'GET#up_vote' do
+      it 'should allow user to upvote successfully' do
+        get :up_vote, params: { id: @answer.id}
+        answers = JSON.parse(response.body)
+        expect(answers["error"]).to eq("You have voted up successfully.") 
+      end
+    end
+
+    describe 'GET#down_vote' do
+      it 'should not allow user to downvote if skill level is less then 10' do
+        @user.update_attribute(:skill_level, 0)
+        get :down_vote, params: { id: @answer.id}
+        answers = JSON.parse(response.body)
+        expect(answers["error"]).to eq("You have no sufficient skill level to vote down this answer.") 
+      end
+
+      it 'should allow user to downvote' do
+        @user.update_attribute(:skill_level, 10)
+        get :down_vote, params: { id: @answer.id}
+        answers = JSON.parse(response.body)
+        expect(answers["error"]).to eq("You have voted down successfully.") 
       end
     end
   end 

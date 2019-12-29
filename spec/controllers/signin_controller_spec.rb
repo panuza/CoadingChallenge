@@ -8,14 +8,14 @@ RSpec.describe SigninController, type: :controller do
     end
     it 'returns http success' do
       post :create, params: {first_name: @user.first_name, last_name: @user.last_name, email: @user.email, password: @user.password }
+      login_response = JSON.parse(response.body)
       expect(response).to be_successful
-      expect(response_json.keys).to eq ['csrf']
-      expect(response.cookies[JWTSessions.access_cookie]).to be_present
+      expect(login_response['jwt']).to be_present
     end
 
     it 'returns unauthorized for invalid params' do
       post :create, params: { email: @user.email, password: 'incorrect' }
-      expect(response).to have_http_status(401)
+      expect(response).to have_http_status(404)
     end
   end
 end
