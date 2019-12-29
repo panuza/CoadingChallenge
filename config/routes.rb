@@ -9,10 +9,10 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :users
       resources :answers
+      get '/challenges/top' => 'challenges#top'
       resources :challenges
       scope :challenges, controller: "challenges" do
         get "/myChallenges/:user_id" => "challenges#my_challenges"
-        get '/top' => 'challenges#top'
       end
       scope :answers, controller: "answers" do
         get "/challengeAnswers/:challenge_id" => "answers#challenge_answers"
