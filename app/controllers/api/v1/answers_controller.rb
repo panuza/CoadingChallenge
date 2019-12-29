@@ -47,8 +47,9 @@ module Api
           if (@answer.get_downvotes.size % 5).zero?
             SkillWorker.perform_async(@user.id, @answer.id, "downvote")
           end
+        else
+          render json: { error: 'You have no sufficient skill level to vote down this answer.' }, status: :voted_up
         end
-        # render json: @answer
       end
 
       # GET /answers/1
