@@ -41,8 +41,8 @@ export default {
     },
     signinSuccessful (response) {
       localStorage.csrf = response.data.csrf
-      localStorage.token = response.data.jwt
       localStorage.signedIn = true
+      localStorage.auth_token = response.data.jwt
       this.error = ''
       this.$router.replace('/challenges')
     },
