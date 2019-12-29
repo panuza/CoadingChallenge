@@ -17,6 +17,7 @@
         </div>
       </div>
       <div class="row pt-5">
+          <div  class="h-4 text-center pb-4 w-100" style="color: green" v-if="error"><h4>{{ error }}</h4></div>
         <!-- <div class="row w-100" v-if="answers.length > 0"> -->
           <table class="py-4" >
             <tr>
@@ -86,7 +87,6 @@ export default {
           .then(response => {
             this.answers = response.data 
             this.$router.replace('/challenges')
-            alert("You have voted successfully")
           })
           .catch(error => this.setError(error, 'Something went wrong'))
       }
@@ -97,7 +97,6 @@ export default {
         .then(response => {
           this.answers = response.data 
           this.$router.replace('/challenges')
-          alert("You have down voted successfully")
 
         })
         .catch(error => this.setError(error, 'Something went wrong'))
