@@ -7,8 +7,7 @@
           <router-link to="/" class="link-grey px-2 no-underline text-right text-white" v-if="!signedIn()">Log In</router-link>
           <router-link to="/signup" class="link-grey px-2 no-underline text-right text-white" v-if="!signedIn()">Sign Up</router-link>
           <router-link to="/challenges" class="link-grey px-2 no-underline text-right text-white" v-if="signedIn()">Challenges</router-link>
-          <!-- <router-link to="/createChallenges" class="link-grey px-2 no-underline" v-if="signedIn()">Create Challenges</router-link> -->
-          <!-- <router-link to="/answers" class="link-grey px-2 no-underline" v-if="signedIn()">Answers</router-link> -->
+          <router-link to="Api/challenges/top" class="link-grey px-2 no-underline text-right text-white" v-if="signedIn()">Top Challenges</router-link>
           <a href="#" @click.prevent="signOut" class="link-grey px-2 no-underline text-right text-white" v-if="signedIn()">Sign out</a>
         </div>
       </div>
