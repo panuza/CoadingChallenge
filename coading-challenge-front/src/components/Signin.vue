@@ -40,11 +40,8 @@ export default {
         .catch(error => this.signinFailed(error))
     },
     signinSuccessful (response) {
-      if (!response.data.csrf) {
-        this.signinFailed(response)
-        return
-      }
       localStorage.csrf = response.data.csrf
+      localStorage.token = response.data.jwt
       localStorage.signedIn = true
       this.error = ''
       this.$router.replace('/challenges')

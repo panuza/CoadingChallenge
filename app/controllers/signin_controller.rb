@@ -1,21 +1,21 @@
 class SigninController < ApplicationController
-  before_action :authorize_access_request!, only: [:destroy]
+  skip_before_action :authenticate_request
 
   def create
     user = User.find_by(email: params[:email])
+
     if user && user.authenticate(params[:password])
-      payload = { user_id: user.id }
-      command = AuthenticateUser.call(params[:email], params[:password])
-      render json: { current_user: user, jwt: command.result, success: "Welcome back, #{user.first_name}" }
+      token =  JsonWebToken.encode(user_id: user.id)
+      render json: { current_user: user, jwt: token, success: "Welcome back, #{user.first_name}" }
     else
       render json: { failure: "Log in failed! Username or password invalid!" }
     end
   end
 
-  # def destroy
-  #   session.flush_by_access_payload
-  #   render json: :ok
-  # end
+  def destroy
+    session[:user_id] = nil
+    render json: :ok
+  end
 
   private
 
