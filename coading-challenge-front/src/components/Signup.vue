@@ -3,7 +3,7 @@
     <div class="border pt-5 p-10 mt-5 border-grey-light shadow rounded col-md-4 offset-md-4 wrapper fadeInDown">
       <h3 class="text-2xl mb-6 text-grey-darkest w-100">Sign Up</h3>
       <form @submit.prevent="signup" class="w-75">
-        <div class="text-red" v-if="error">{{ error }}</div>
+        <div style="color: red" v-if="error">{{ error }}</div>
         <div class="mb-6">
           <input type="text" v-model="first_name" class="input" id="first_name" required="required" placeholder="First Name">
         </div>

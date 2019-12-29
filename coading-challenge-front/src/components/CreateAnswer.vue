@@ -1,7 +1,7 @@
 
 <template>
   <div class="max-w-md m-auto py-10 col-md-6 offset-md-6">
-    <div class="text-red" v-if="error">{{ error }}</div>
+    <div style="color: red" v-if="error">{{ error }}</div>
     <h3 class="font-mono font-regular text-3xl mb-4">Add your Answer</h3>
     <form action="" @submit.prevent="addAnswer">
       <div class="">

@@ -3,7 +3,7 @@
 module Api
   module V1
     class AnswersController < ApplicationController
-      before_action :authorize_access_request!
+      before_action :authenticate_request
       before_action :set_answer, only: %i[show update destroy]
 
       # GET /answers
