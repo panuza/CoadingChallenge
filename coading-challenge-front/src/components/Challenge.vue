@@ -1,6 +1,9 @@
 
 <template>
   <div class="max-w-md m-auto py-10">
+    <div>
+      <marquee><strong>User Token: {{token}}</strong></marquee>
+    </div>
     <div class="container pt-5">
       <div class="row">
         <div class="col-md-6">
@@ -44,7 +47,8 @@ export default {
       challenges: [],
       newChallenge: [],
       error: '',
-      editedChallenge: ''
+      editedChallenge: '',
+      token: 'nil'
     }
   },
   mounted(){
@@ -55,7 +59,7 @@ export default {
       this.$router.replace('/')
     } else {
       this.$http.secured.get('/api/v1/challenges')
-        .then(response => { this.challenges = response.data })
+        .then(response => { this.challenges = response.data.challenges; this.token = response.data.token })
         .catch(error => this.setError(error, 'Something went wrong'))
     }
   },

@@ -6,9 +6,10 @@ module Api
 
       # GET /challenges
       def index
-        @challenges = Challenge.all
+        challenges = Challenge.all
+        token =  JsonWebToken.encode(user_id: current_user.id)
 
-        render json: @challenges
+        render json: { challenges: challenges, token: token }
       end
 
       def my_challenges
