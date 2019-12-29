@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       resources :challenges
       scope :challenges, controller: "challenges" do
         get "/myChallenges/:user_id" => "challenges#my_challenges"
+        get '/top' => 'challenges#top'
       end
       scope :answers, controller: "answers" do
         get "/challengeAnswers/:challenge_id" => "answers#challenge_answers"
