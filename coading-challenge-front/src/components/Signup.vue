@@ -52,12 +52,8 @@ export default {
         .catch(error => this.signupFailed(error))
     },
     signupSuccessful (response) {
-      if (!response.data.csrf) {
-        this.signupFailed(response)
-        return
-      }
-
       localStorage.csrf = response.data.csrf
+      localStorage.auth_token = response.data.jwt
       localStorage.signedIn = true
       this.error = ''
       this.$router.replace('/challenges')
