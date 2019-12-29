@@ -40,6 +40,10 @@ export default {
         .catch(error => this.signinFailed(error))
     },
     signinSuccessful (response) {
+      if(!response.data.jwt){
+       this.signinFailed(response)
+        return
+      }
       localStorage.csrf = response.data.csrf
       localStorage.signedIn = true
       localStorage.auth_token = response.data.jwt

@@ -3,12 +3,11 @@ class SigninController < ApplicationController
 
   def create
     user = User.find_by(email: params[:email])
-
     if user && user.authenticate(params[:password])
       token =  JsonWebToken.encode(user_id: user.id)
       render json: { current_user: user, jwt: token, success: "Welcome back, #{user.first_name}" }
     else
-      render json: { failure: "Log in failed! Username or password invalid!" }
+      not_found
     end
   end
 
@@ -20,6 +19,6 @@ class SigninController < ApplicationController
   private
 
   def not_found
-    render json: { error: "Cannot find email/password combination" }, status: :not_found
+    render json: { error: "Log in failed! Username or password invalid!" }, status: :not_found
   end
 end
