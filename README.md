@@ -37,18 +37,28 @@ How to run the test suite
 ## Yarn
 
 Run `yarn install` to install all packages
-  
-## Start backend app
 
-Run `bundle exec rails s` 
-
-## Start frontend app
+## Frontend app
 
 Github link front end app on vue https://github.com/panuza/frontend-code
-
-Run `yarn dev`  
-
 
 ## Project link on heroku
 
 https://secure-cove-66231.herokuapp.com
+
+## Steps to run project on local
+
+* Update core.rb on backend
+	change origins 'https://secure-cove-66231.herokuapp.com' to origins 'http://localhost:8080'
+
+	Run `bundle exec rails s` 
+
+
+* Update on frontend app 
+	Make changes on /src/backend/axios/index.js
+	
+	change const API_URL = 'https://sleepy-headland-47356.herokuapp.com/' to origins 'http://localhost:3000'
+
+	Run `yarn dev`  to start frontend app.
+
+	Visit http://localhost:8080 on your browser and you will get the app running up on your local.
